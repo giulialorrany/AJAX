@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX - XMLHttpRequest (Original)</title>
+</head>
+<body>
+<div id="demo">
+    <h1>Consulta de CEP - XMLHttpRequest (Original da Aula)</h1>
+    <input type="text" id="cep" placeholder="Digite seu CEP" maxlength="8">
+    <button type="button" onclick="loadDoc()">Pesquisar CEP</button>
+    <br><br>
+    <input type="text" id="logradouro" placeholder="Logradouro" readonly><br>
+    <input type="text" id="complemento" placeholder="Complemento" readonly><br>
+    <input type="text" id="bairro" placeholder="Bairro" readonly><br>
+    <input type="text" id="localidade" placeholder="Cidade" readonly><br>
+    <input type="text" id="uf" placeholder="UF" readonly>
+</div>
+
+<script>
+function loadDoc() {
+    let cep = document.getElementById("cep").value.trim();
+    
+    // Validação simples (eu adicionei)
+    if (cep.length !== 8) {
+        alert("CEP deve ter 8 dígitos!");
+        return;
+    }
+
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let endereco = JSON.parse(this.responseText);
+            
+            document.getElementById("logradouro").value = endereco.logradouro || '';
+            document.getElementById("complemento").value = endereco.complemento || '';
+            document.getElementById("bairro").value = endereco.bairro || '';
+            document.getElementById("localidade").value = endereco.localidade || '';
+            document.getElementById("uf").value = endereco.uf || '';
+        }
+    };
+    
+    xhttp.open("GET", "https://viacep.com.br/ws/" + cep + "/json", true);
+    xhttp.send();
+}
+</script>
+</body>
+</html>
