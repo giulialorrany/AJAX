@@ -42,4 +42,3 @@ O `async/await` ganhou de facilmente pra mim. O código fica muito mais fácil d
 
 Gostei bastante da atividade! Foi bem prático ver as diferenças na hora de codar.
 
-Qualquer dúvida, pode falar comigo!
