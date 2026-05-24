@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX com Promises</title>
+</head>
+<body>
+    <h1>Consulta de CEP - Usando Promises</h1>
+    <input type="text" id="cep" placeholder="Digite seu CEP" maxlength="8">
+    <button onclick="buscarCEP()">Pesquisar CEP</button>
+    <br><br>
+
+    <input type="text" id="logradouro" placeholder="Logradouro" readonly><br>
+    <input type="text" id="complemento" placeholder="Complemento" readonly><br>
+    <input type="text" id="bairro" placeholder="Bairro" readonly><br>
+    <input type="text" id="localidade" placeholder="Cidade" readonly><br>
+    <input type="text" id="uf" placeholder="UF" readonly>
+
+    <script>
+    function buscarCEP() {
+        const cep = document.getElementById("cep").value.trim();
+        
+        if (cep.length !== 8) {
+            alert("CEP inválido! Deve ter 8 dígitos.");
+            return;
+        }
+
+        fetch(`https://viacep.com.br/ws/${cep}/json`)
+            .then(response => {
+                if (!response.ok) throw new Error("Erro na requisição");
+                return response.json();
+            })
+            .then(endereco => {
+                if (endereco.erro) throw new Error("CEP não encontrado");
+
+                document.getElementById("logradouro").value = endereco.logradouro || '';
+                document.getElementById("complemento").value = endereco.complemento || '';
+                document.getElementById("bairro").value = endereco.bairro || '';
+                document.getElementById("localidade").value = endereco.localidade || '';
+                document.getElementById("uf").value = endereco.uf || '';
+            })
+            .catch(erro => {
+                console.error(erro);
+                alert("Erro ao buscar CEP: " + erro.message);
+            });
+    }
+    </script>
+</body>
+</html>
