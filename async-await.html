@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX com Async/Await</title>
+</head>
+<body>
+    <h1>Consulta de CEP - Async/Await (Minha Versão Favorita)</h1>
+    <input type="text" id="cep" placeholder="Digite seu CEP" maxlength="8">
+    <button onclick="buscarCEP()">Pesquisar CEP</button>
+    <br><br>
+
+    <input type="text" id="logradouro" placeholder="Logradouro" readonly><br>
+    <input type="text" id="complemento" placeholder="Complemento" readonly><br>
+    <input type="text" id="bairro" placeholder="Bairro" readonly><br>
+    <input type="text" id="localidade" placeholder="Cidade" readonly><br>
+    <input type="text" id="uf" placeholder="UF" readonly>
+
+    <script>
+    // Essa é a forma que eu mais gostei de escrever
+    async function buscarCEP() {
+        const cep = document.getElementById("cep").value.trim();
+        
+        if (cep.length !== 8) {
+            alert("Por favor, digite um CEP válido com 8 dígitos.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json`);
+            
+            if (!response.ok) throw new Error("Falha na comunicação com o servidor");
+
+            const endereco = await response.json();
+
+            if (endereco.erro) {
+                alert("CEP não encontrado. Verifique o número digitado.");
+                return;
+            }
+
+            // Preenchendo os campos na tela
+            document.getElementById("logradouro").value = endereco.logradouro || '';
+            document.getElementById("complemento").value = endereco.complemento || '';
+            document.getElementById("bairro").value = endereco.bairro || '';
+            document.getElementById("localidade").value = endereco.localidade || '';
+            document.getElementById("uf").value = endereco.uf || '';
+
+        } catch (erro) {
+            console.error("Erro capturado:", erro);
+            alert("Não foi possível buscar o CEP. Tente novamente mais tarde.");
+        }
+    }
+    </script>
+</body>
+</html>
